@@ -139,7 +139,7 @@ export class Tree {
    * @returns {boolean} A flag indicating that children should be loaded for the current node.
    */
   public childrenShouldBeLoaded(): boolean {
-    console.log(`hasChildren ${this.node.hasChildren}`)
+    
     return !!this._loadChildren || this.node.hasChildren === true;
   }
 
