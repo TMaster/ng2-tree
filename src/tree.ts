@@ -40,7 +40,7 @@ export class Tree {
 
   public node: TreeModel;
   public parent: Tree;
-
+  public isChecked : boolean;
   // STATIC METHODS ----------------------------------------------------------------------------------------------------
 
   /**
@@ -87,7 +87,8 @@ export class Tree {
   }
 
   private buildTreeFromModel(model: TreeModel, parent: Tree, isBranch: boolean): void {
-     this.parent = parent;
+    this.parent = parent;
+    this.isChecked = model.isChecked === true;
     this.node = Object.assign(omit(model, 'children') as TreeModel, {
       settings: TreeModelSettings.merge(model, get(parent, 'node') as TreeModel)
     }, {hasChildren : model.hasChildren === true}) as TreeModel;

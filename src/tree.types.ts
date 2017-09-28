@@ -25,7 +25,8 @@ export interface TreeModel {
   hasChildren?: boolean;
   _status?: TreeStatus;
   _foldingType?: FoldingType;
-  }
+  isChecked? : boolean;
+}
 
 export interface CssClasses {
   /* The class or classes that should be added to the expanded node */
@@ -95,6 +96,7 @@ export interface Ng2TreeSettings {
    * @type boolean
    */
   rootIsVisible?: boolean;
+  enableCheckboxes? :boolean;
 }
 
 export enum TreeStatus {

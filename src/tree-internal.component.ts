@@ -24,6 +24,9 @@ import { get } from './utils/fn.utils';
         [tree]="tree">
 
         <div class="folding" (click)="onSwitchFoldingType()" [ngClass]="tree.foldingCssClass"></div>
+        <div class="node-checkbox" *ngIf="settings.enableCheckboxes">
+          <input checkbox  type="checkbox" [checked]="isChecked" (change)="NodeCheckSatusChanged()" />
+        </div>
         <div class="node-value"
           *ngIf="!shouldShowInputForTreeValue()"
           [class.node-selected]="isSelected"
@@ -32,7 +35,6 @@ import { get } from './utils/fn.utils';
             <span class="node-name" [innerHTML]="tree.value | safeHtml"></span>
             <span class="loading-children" *ngIf="tree.childrenAreBeingLoaded()"></span>
         </div>
-
         <input type="text" class="node-value"
            *ngIf="shouldShowInputForTreeValue()"
            [nodeEditable]="tree.value"
@@ -48,7 +50,7 @@ import { get } from './utils/fn.utils';
       <node-menu *ngIf="isRightMenuVisible" (menuItemSelected)="onMenuItemSelected($event)"></node-menu>
 
       <ng-template [ngIf]="tree.isNodeExpanded()">
-        <tree-internal *ngFor="let child of tree.childrenAsync | async" [tree]="child"></tree-internal>
+        <tree-internal *ngFor="let child of tree.childrenAsync | async" [tree]="child" [settings]="settings"></tree-internal>
       </ng-template>
     </li>
   </ul>
@@ -62,6 +64,7 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
   public settings: TreeTypes.Ng2TreeSettings;
 
   public isSelected = false;
+  public isChecked = false;
   public isRightMenuVisible = false;
   public isLeftMenuVisible = false;
   public controller: TreeController;
@@ -74,12 +77,15 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+
+    this.isChecked = this.tree.isChecked;
+    
     this.controller = new TreeController(this);
     if (get(this.tree, 'node.id', '')) {
       this.treeService.setController(this.tree.node.id, this.controller);
     }
 
-    this.settings = this.settings || { rootIsVisible: true };
+    this.settings = this.settings || { rootIsVisible: true, enableCheckboxes : false };
 
     this.subscriptions.push(this.nodeMenuService.hideMenuStream(this.element)
       .subscribe(() => {
@@ -226,5 +232,24 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
 
   public isRootHidden(): boolean {
     return this.tree.isRoot() && !this.settings.rootIsVisible;
+  }
+
+public NodeCheckSatusChanged() {
+  if(this.isChecked) {
+    this.onNodeChecked();
+  }
+  else {
+    this.onNodeUnchecked();
+  }
+}
+
+  public onNodeChecked() : void{
+    this.isChecked = true;
+    this.treeService.fireNodeChecked(this.tree);
+  }
+
+  public onNodeUnchecked() : void{
+    this.isChecked = false
+    this.treeService.fireNodeUnchecked(this.tree);
   }
 }
