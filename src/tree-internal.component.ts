@@ -250,15 +250,24 @@ this.isChecked = !this.isChecked;
   public onNodeChecked() : void{
     this.isChecked = true;
     this.treeService.fireNodeChecked(this.tree);
-    if(this.tree.children) {
-     this.tree.children.forEach((child: Tree) => {
-       let controller = this.treeService.getController(child.id);
-       controller.check();
-     })
-    }
+this.executeOnChildController(controller => controller.check());
+    
   }
 
   public onNodeUnchecked() : void{
+    this.isChecked = false;
     this.treeService.fireNodeUnchecked(this.tree);
+    this.executeOnChildController(controller => controller.uncheck());
+  }
+
+  private executeOnChildController(executor: (controller : TreeController) => void) {
+    if(this.tree.children) {
+      this.tree.children.forEach((child: Tree) => {
+        let controller = this.treeService.getController(child.id);
+        if(controller != null) {
+        executor(controller);
+        }
+      });
+     }
   }
 }
