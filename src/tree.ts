@@ -88,7 +88,7 @@ export class Tree {
 
   private buildTreeFromModel(model: TreeModel, parent: Tree, isBranch: boolean): void {
     this.parent = parent;
-    this.isChecked = model.isChecked === true;
+    this.isChecked = model.checked === true;
     this.node = Object.assign(omit(model, 'children') as TreeModel, {
       settings: TreeModelSettings.merge(model, get(parent, 'node') as TreeModel)
     }, {hasChildren : model.hasChildren === true}) as TreeModel;
