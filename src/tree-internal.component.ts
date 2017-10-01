@@ -237,21 +237,28 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
   }
 
 public NodeCheckSatusChanged() {
+this.isChecked = !this.isChecked;
   if(this.isChecked) {
     this.onNodeChecked();
   }
   else {
     this.onNodeUnchecked();
   }
+
 }
 
   public onNodeChecked() : void{
     this.isChecked = true;
     this.treeService.fireNodeChecked(this.tree);
+    if(this.tree.children) {
+     this.tree.children.forEach((child: Tree) => {
+       let controller = this.treeService.getController(child.id);
+       controller.check();
+     })
+    }
   }
 
   public onNodeUnchecked() : void{
-    this.isChecked = false
     this.treeService.fireNodeUnchecked(this.tree);
   }
 }

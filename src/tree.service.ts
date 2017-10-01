@@ -64,7 +64,7 @@ export class TreeService {
   }
 
   public fireNodeUnchecked(tree: Tree) : void {
-    this.nodeChecked$.next(new NodeUncheckedEvent(tree));
+    this.nodeUnchecked$.next(new NodeUncheckedEvent(tree));
   }
 
   public fireNodeSwitchFoldingType(tree: Tree): void {
