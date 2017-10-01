@@ -25,7 +25,7 @@ import { get } from './utils/fn.utils';
 
         <div class="folding" (click)="onSwitchFoldingType()" [ngClass]="tree.foldingCssClass"></div>
         <div class="node-checkbox" *ngIf="settings.enableCheckboxes">
-          <input checkbox  type="checkbox" [checked]="isChecked" (change)="NodeCheckSatusChanged()" />
+          <input checkbox  type="checkbox" [disabled]="isReadOnly" [checked]="isChecked" (change)="NodeCheckSatusChanged()" />
         </div>
         <div class="node-value"
           *ngIf="!shouldShowInputForTreeValue()"
@@ -65,6 +65,7 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
 
   public isSelected = false;
   public isChecked = false;
+  public isReadOnly = true;
   public isRightMenuVisible = false;
   public isLeftMenuVisible = false;
   public controller: TreeController;
@@ -79,6 +80,7 @@ export class TreeInternalComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
 
     this.isChecked = this.tree.isChecked;
+    this.isReadOnly = this.tree.isReadOnly;
     
     this.controller = new TreeController(this);
     if (get(this.tree, 'node.id', '')) {

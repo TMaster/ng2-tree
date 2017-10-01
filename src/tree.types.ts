@@ -26,6 +26,7 @@ export interface TreeModel {
   _status?: TreeStatus;
   _foldingType?: FoldingType;
   checked? : boolean;
+  readOnly?: boolean;
 }
 
 export interface CssClasses {

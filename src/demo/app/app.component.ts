@@ -458,7 +458,7 @@ export class AppComponent implements OnInit {
           {
             value: 'Aspect-oriented programming',
             children: [
-              {value: 'AspectJ'},
+              {value: 'AspectJ', readOnly : true, checked:true},
               {value: 'AspectC++'}
             ]
           },
