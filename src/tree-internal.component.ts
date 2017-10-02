@@ -5,7 +5,7 @@ import { TreeController } from './tree-controller';
 import { NodeMenuService } from './menu/node-menu.service';
 import { NodeMenuItemAction, NodeMenuItemSelectedEvent } from './menu/menu.events';
 import { NodeEditableEvent, NodeEditableEventAction } from './editable/editable.events';
-import { NodeRemovedEvent, NodeCheckedEvent, NodeUncheckedEvent,NodeCreatedEvent} from './tree.events'
+import { NodeRemovedEvent, NodeCheckedEvent, NodeIndeterminateEvent} from './tree.events'
 import { TreeService } from './tree.service';
 import * as EventUtils from './utils/event.utils';
 import { NodeDraggableEvent } from './draggable/draggable.events';
@@ -126,8 +126,15 @@ this.subscriptions.push(this.treeService.nodeChecked$
     .filter((e:NodeCheckedEvent) => this.tree.children && this.tree.children.some((child: Tree) => child.id === e.node.id))
   .subscribe((e: NodeCheckedEvent) => {
      this.updateIndeterminateState();
-    
     }));
+
+
+    this.subscriptions.push(this.treeService.nodeIndeterminate$
+      .filter((e:NodeIndeterminateEvent) => this.tree.children && this.tree.children.some((child: Tree) => child.id === e.node.id))
+    .subscribe((e: NodeIndeterminateEvent) => {
+       this.setNodeInderminated();
+      }));
+  
 
   }
 
@@ -309,7 +316,7 @@ const checkedChildren = this.tree.children.filter(child => child.isChecked).leng
     this.treeService.fireNodeChecked(this.tree)
   }
   else {
-    this._checkboxElement.nativeElement.indeterminate = true;
+   this.setNodeInderminated();
   }
 }
 
@@ -322,5 +329,10 @@ const checkedChildren = this.tree.children.filter(child => child.isChecked).leng
         }
       });
      }
+  }
+
+  private setNodeInderminated(): void {
+    this._checkboxElement.nativeElement.indeterminate = true;
+    this.treeService.fireNodeIndeterminate(this.tree);
   }
 }
