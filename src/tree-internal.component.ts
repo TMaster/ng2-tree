@@ -84,8 +84,7 @@ _checkboxElement: ElementRef;
 T
   public ngOnInit(): void {
 
-    this.isChecked = this.tree.isChecked;
-    this.isReadOnly = this.tree.isReadOnly;
+    this.isChecked = this.tree.isChecked;    this.isReadOnly = this.tree.isReadOnly;
 
     this.controller = new TreeController(this);
     if (get(this.tree, 'node.id', '')) {
@@ -294,7 +293,7 @@ public NodeCheckSatusChanged() {
 
 public updateIndeterminateState(): void {
 
-  setTimeout(() => {
+  setTimeout(() => { //calling setTimeout so the value of isChecked will be updated and after that I'll check the children status.
     this.updateIndeterminateStateInternal();
   },1)
 };
